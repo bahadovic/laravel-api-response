@@ -1,0 +1,14 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+    ignoreErrors:
+        -
+            identifier: missingType.iterableValue
+            path: src/Facades/ApiResponse.php
+        -
+            identifier: trait.unused
+            path: src/Traits/HasApiResponse.php
