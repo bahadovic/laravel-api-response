@@ -1,8 +1,12 @@
 # Laravel API Response Formatter
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/bahadovic/laravel-api-response.svg?style=flat-square)](https://packagist.org/packages/bahadovic/laravel-api-response)
-[![Total Downloads](https://img.shields.io/packagist/dt/bahadovic/laravel-api-response.svg?style=flat-square)](https://packagist.org/packages/bahadovic/laravel-api-response)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
+<p align="center">
+  <a href="https://packagist.org/packages/bahadovic/laravel-api-response"><img src="https://img.shields.io/packagist/v/bahadovic/laravel-api-response.svg?style=flat-square&color=blue" alt="Latest Version on Packagist"></a>
+  <a href="https://packagist.org/packages/bahadovic/laravel-api-response"><img src="https://img.shields.io/packagist/dt/bahadovic/laravel-api-response.svg?style=flat-square&color=green" alt="Total Downloads"></a>
+  <a href="https://github.com/bahadovic/laravel-api-response/actions"><img src="https://img.shields.io/github/actions/workflow/status/bahadovic/laravel-api-response/run-tests.yml?branch=main&label=tests&style=flat-square" alt="Build Status"></a>
+  <a href="https://phpstan.org/"><img src="https://img.shields.io/badge/PHPStan-Level%208-brightgreen?style=flat-square" alt="PHPStan Level 8"></a>
+  <a href="LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License"></a>
+</p>
 
 A fluent, modern, and highly-flexible API response builder for Laravel. Designed for minimal runtime overhead, strict typing, and native support for Eloquent Resources and all Laravel Pagination types.
 
