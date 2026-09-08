@@ -247,40 +247,42 @@ class ResponseBuilder implements ResponseBuilderInterface
     /**
      * @return array<string, mixed>
      */
-    protected function formatPaginationMeta(object $paginator): array
+    protected function formatPaginationMeta(mixed $paginator): array
     {
-        $hasMore = false;
-        if (method_exists($paginator, 'hasMorePages')) {
-            $hasMore = (bool) $paginator->hasMorePages();
-        }
-
-        $perPage = method_exists($paginator, 'perPage')
-            ? (int) $paginator->perPage()
-            : 15;
-
-        $meta = [
-            'per_page' => $perPage,
-            'has_more' => $hasMore,
-        ];
-
         if ($paginator instanceof LengthAwarePaginator) {
-            $meta['total'] = $paginator->total();
-            $meta['current_page'] = $paginator->currentPage();
-            $meta['last_page'] = $paginator->lastPage();
-            $meta['from'] = $paginator->firstItem();
-            $meta['to'] = $paginator->lastItem();
-        } elseif ($paginator instanceof Paginator) {
-            $meta['current_page'] = $paginator->currentPage();
-            $meta['from'] = $paginator->firstItem();
-            $meta['to'] = $paginator->lastItem();
-        } elseif ($paginator instanceof CursorPaginator) {
-            $meta['cursor'] = [
-                'current' => $paginator->cursor()?->encode(),
-                'next' => $paginator->nextCursor()?->encode(),
-                'prev' => $paginator->previousCursor()?->encode(),
+            return [
+                'total' => $paginator->total(),
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'per_page' => $paginator->perPage(),
+                'from' => $paginator->firstItem(),
+                'to' => $paginator->lastItem(),
+                'has_more' => $paginator->hasMorePages(),
             ];
         }
 
-        return $meta;
+        if ($paginator instanceof Paginator) {
+            return [
+                'current_page' => $paginator->currentPage(),
+                'per_page' => $paginator->perPage(),
+                'from' => $paginator->firstItem(),
+                'to' => $paginator->lastItem(),
+                'has_more' => $paginator->hasMorePages(),
+            ];
+        }
+
+        if ($paginator instanceof CursorPaginator) {
+            return [
+                'per_page' => $paginator->perPage(),
+                'has_more' => method_exists($paginator, 'hasMorePages') ? (bool) $paginator->hasMorePages() : false,
+                'cursor' => [
+                    'current' => $paginator->cursor()?->encode(),
+                    'next' => $paginator->nextCursor()?->encode(),
+                    'prev' => $paginator->previousCursor()?->encode(),
+                ],
+            ];
+        }
+
+        return [];
     }
 }

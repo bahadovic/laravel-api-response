@@ -6,14 +6,12 @@ parameters:
     paths:
         - src
     reportUnmatchedIgnoredErrors: false
-    checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
-        - '#hasMorePages#'
-        - '#formatPaginationMeta#'
-        - '#Paginator#'
+        - identifier: missingType.generics
         -
             identifier: missingType.iterableValue
             path: src/Facades/ApiResponse.php
         -
             identifier: trait.unused
             path: src/Traits/HasApiResponse.php
+        - '#hasMorePages#'

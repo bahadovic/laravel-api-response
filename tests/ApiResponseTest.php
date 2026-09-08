@@ -374,20 +374,20 @@ class ApiResponseTest extends TestCase
     {
         config(['api-response.keys.meta' => 'custom_meta']);
 
-        // ۱. داده معمولی
+        
         $standard = ApiResponse::make()->data(['val' => 1])->meta(['tag' => 'std'])->send();
         $this->assertArrayHasKey('custom_meta', $standard->getData(true));
 
-        // ۲. خطا
+
         $error = ApiResponse::make()->status(400)->errors(['e' => 1])->meta(['tag' => 'err'])->send();
         $this->assertArrayHasKey('custom_meta', $error->getData(true));
 
-        // ۳. صفحه‌بندی
+
         $paginator = new LengthAwarePaginator(collect([['id' => 1]]), 1, 10, 1);
         $paginated = ApiResponse::make()->data($paginator)->meta(['tag' => 'paged'])->send();
         $this->assertArrayHasKey('custom_meta', $paginated->getData(true));
 
-        // ۴. ریسورس
+
         $resource = new JsonResource(['id' => 5]);
         $resourceResponse = ApiResponse::make()->data($resource)->meta(['tag' => 'res'])->send();
         $this->assertArrayHasKey('custom_meta', $resourceResponse->getData(true));
@@ -400,14 +400,14 @@ class ApiResponseTest extends TestCase
         $response = ApiResponse::make()
             ->data($paginator)
             ->meta([
-                'total' => 9999, // کلید متداخل که نباید لاراول را خراب کند
+                'total' => 9999,
                 'safe_custom' => 'retained',
             ])
             ->send();
 
         $data = $response->getData(true);
 
-        $this->assertEquals(1, $data['meta']['total']); // مقدار واقعی لاراول باید ارجح باشد
+        $this->assertEquals(1, $data['meta']['total']);
         $this->assertEquals('retained', $data['meta']['safe_custom']);
     }
 
@@ -420,9 +420,7 @@ class ApiResponseTest extends TestCase
         $this->assertSame($instance1, $instance2);
     }
 
-    /**
-     * تست ادغام بدون تداخل وقتی Resource خودش از قبل کلید meta داشته باشد
-     */
+
     public function test_it_merges_pre_existing_resource_meta_without_collision(): void
     {
         $resource = (new JsonResource(['id' => 10]))
@@ -445,9 +443,7 @@ class ApiResponseTest extends TestCase
         $this->assertEquals('mobile_app', $data['meta']['client']);
     }
 
-    /**
-     * تست صحت کارکرد Trait در کنترلر واقعی
-     */
+
     public function test_has_api_response_trait_works_in_controllers(): void
     {
         $controller = new class
@@ -475,9 +471,6 @@ class ApiResponseTest extends TestCase
         $this->assertFalse($error->getData(true)['success']);
     }
 
-    /**
-     * تست نشت نکردن هدرها و متادیتا بین درخواست‌های هم‌زمان/متوالی
-     */
     public function test_builder_state_does_not_leak_between_instances(): void
     {
         $first = ApiResponse::make()
@@ -537,20 +530,17 @@ class ApiResponseTest extends TestCase
 
         ApiResponse::make()->data($resource)->meta(['added' => 1])->send();
 
-        // ریسورس اصلی نباید تغییر کرده باشد
         $this->assertEmpty($resource->additional);
     }
 
     public function test_no_static_state_leaks_in_octane_simulation(): void
     {
-        // شبیه‌سازی درخواست اول همراه با متادیتا و هدر
         ApiResponse::make()
             ->data(['first' => true])
             ->meta(['trace' => 'abc'])
             ->header('X-Request-Id', 'req-1')
             ->send();
 
-        // درخواست دوم در یک ورکر پایدار (Octane) باید کاملاً پاک و مستقل باشد
         $response = ApiResponse::make()->data(['second' => true])->send();
         $data = $response->getData(true);
 
