@@ -9,6 +9,7 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
         - '#hasMorePages#'
+        - '#formatPaginationMeta#'
         - '#Paginator#'
         -
             identifier: missingType.iterableValue

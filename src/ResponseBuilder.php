@@ -247,12 +247,19 @@ class ResponseBuilder implements ResponseBuilderInterface
     /**
      * @return array<string, mixed>
      */
-    protected function formatPaginationMeta(LengthAwarePaginator|Paginator|CursorPaginator $paginator): array
+    protected function formatPaginationMeta(object $paginator): array
     {
-        $hasMore = method_exists($paginator, 'hasMorePages') && (bool)$paginator->hasMorePages();
+        $hasMore = false;
+        if (method_exists($paginator, 'hasMorePages')) {
+            $hasMore = (bool) $paginator->hasMorePages();
+        }
+
+        $perPage = method_exists($paginator, 'perPage')
+            ? (int) $paginator->perPage()
+            : 15;
 
         $meta = [
-            'per_page' => $paginator->perPage(),
+            'per_page' => $perPage,
             'has_more' => $hasMore,
         ];
 
