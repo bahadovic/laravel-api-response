@@ -50,6 +50,9 @@
       "aliases": {
         "ApiResponse": "Bahadovic\\ApiResponse\\Facades\\ApiResponse"
       }
+    },
+    "branch-alias": {
+      "dev-main": "1.0.x-dev"
     }
   },
   "minimum-stability": "stable",

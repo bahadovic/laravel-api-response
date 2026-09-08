@@ -145,7 +145,6 @@ class ResponseBuilder implements ResponseBuilderInterface
             $this->success = false;
         }
 
-        // خواندن امن و بدون ریسک نشت حافظه
         /** @var array<string, mixed> $config */
         $config = (array) config('api-response', []);
 
@@ -163,7 +162,6 @@ class ResponseBuilder implements ResponseBuilderInterface
         $defaultSuccessMessage = $messages['success'] ?? 'Operation completed successfully.';
         $defaultErrorMessage = $messages['error'] ?? 'An error occurred while processing the request.';
 
-        // ۱. سناریوی خطا
         if (! $this->success) {
             $payload = [
                 $successKey => false,
@@ -185,7 +183,6 @@ class ResponseBuilder implements ResponseBuilderInterface
             return new JsonResponse($payload, $this->statusCode, $this->headers);
         }
 
-        // ۲. پشتیبانی از JsonResource لاراول
         if ($this->data instanceof JsonResource) {
             $resource = clone $this->data;
             $existingAdditional = (array) $resource->additional;
@@ -212,7 +209,6 @@ class ResponseBuilder implements ResponseBuilderInterface
                 ->withHeaders($this->headers);
         }
 
-        // ۳. پشتیبانی از انواع Paginator
         if (
             $this->data instanceof LengthAwarePaginator
             || $this->data instanceof Paginator
@@ -228,7 +224,6 @@ class ResponseBuilder implements ResponseBuilderInterface
             ], $this->statusCode, $this->headers);
         }
 
-        // ۴. داده‌های استاندارد لاراول (بدون تغییر در نمونه اصلی)
         $resolvedData = $this->data;
         if ($resolvedData instanceof Arrayable) {
             $resolvedData = $resolvedData->toArray();
@@ -264,6 +259,10 @@ class ResponseBuilder implements ResponseBuilderInterface
             $meta['total'] = $paginator->total();
             $meta['current_page'] = $paginator->currentPage();
             $meta['last_page'] = $paginator->lastPage();
+            $meta['from'] = $paginator->firstItem();
+            $meta['to'] = $paginator->lastItem();
+        } elseif ($paginator instanceof Paginator) {
+            $meta['current_page'] = $paginator->currentPage();
             $meta['from'] = $paginator->firstItem();
             $meta['to'] = $paginator->lastItem();
         } elseif ($paginator instanceof CursorPaginator) {

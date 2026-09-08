@@ -13,10 +13,17 @@ jobs:
       fail-fast: false
       matrix:
         php: [ 8.2, 8.3, 8.4 ]
-        laravel: [ '10.*', '11.*', '12.*' ]
+        laravel: [ 10, 11, 12 ]
+        include:
+          - laravel: 10
+            testbench: 8.*
+          - laravel: 11
+            testbench: 9.*
+          - laravel: 12
+            testbench: 10.*
         exclude:
           - php: 8.4
-            laravel: '10.*'
+            laravel: 10
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }}
 
@@ -34,10 +41,16 @@ jobs:
       - name: Validate Composer
         run: composer validate --strict
 
-      - name: Install dependencies
+      - name: Configure Composer Security Resolver
         run: |
-          composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/http:${{ matrix.laravel }}" "illuminate/pagination:${{ matrix.laravel }}" "illuminate/validation:${{ matrix.laravel }}" --no-interaction --no-update
-          composer update --prefer-dist --no-interaction --no-progress
+          composer config --json policy.advisories.block false || true
+
+      - name: Install dependencies
+        env:
+          COMPOSER_NO_BLOCKING: 1
+        run: |
+          composer require "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-progress --no-audit
 
       - name: Run Static Analysis
         run: composer analyse

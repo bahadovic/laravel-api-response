@@ -1,9 +1,7 @@
 <?php
 
 return [
-    /*
-    | کلیدهای نام‌گذاری خروجی JSON
-    */
+
     'keys' => [
         'success' => 'success',
         'message' => 'message',
@@ -12,9 +10,7 @@ return [
         'meta' => 'meta',
     ],
 
-    /*
-    | پیام‌های پیش‌فرض پاسخ‌ها
-    */
+
     'messages' => [
         'success' => 'Operation completed successfully.',
         'created' => 'Resource created successfully.',
