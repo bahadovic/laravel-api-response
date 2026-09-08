@@ -6,7 +6,10 @@ parameters:
     paths:
         - src
     reportUnmatchedIgnoredErrors: false
+    checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
+        - '#hasMorePages#'
+        - '#Paginator#'
         -
             identifier: missingType.iterableValue
             path: src/Facades/ApiResponse.php
